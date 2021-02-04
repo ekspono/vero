@@ -271,11 +271,18 @@
 
 (defn start
   [raw-config args cb]
-  ;; Prepare docopt dependency
+
+  ;; Prepare docopt dependency unless provided by the preflight-fn
   (let [repo-dir (->> (<-run ["git" "rev-parse" "--show-toplevel"])
                       (:output)
                       (string/trim)
                       (string/trim-newline))]
+    ;; A custom preflight function can be passed as a part of the config
+    ;; This can be used to configure repo-level things that need to be in 
+    ;; place before vero scripts are executed (creating empty dirs, downloading dependencies, etc)
+    (when-let [preflight-fn (:preflight-fn raw-config)]
+      (apply preflight-fn [repo-dir]))
+
     (docopt-parser/init repo-dir run))
 
   (docopt-parser/parse (:usage raw-config)
