@@ -8,12 +8,6 @@
 
 (def config (atom {}))
 
-(def alphanumeric "0123456789abcdefghijklmnopqrstuvwxyz")
-
-(defn rand-alphanumeric
-  [len]
-  (apply str (take len (repeatedly #(rand-nth alphanumeric)))))
-
 (defn get-env-vars
   []
   (:vars @config))
@@ -41,18 +35,6 @@
   [path]
   (.exists (io/file path)))
 
-(defn- load-env-file
-  [f]
-  (let [contents (slurp f)]
-    (->> (string/split contents #"\n")
-         (filter (fn [s] (not (re-matches #"#.*" s))))
-         (map (fn [s] (as-> s $
-                        (clojure.string/replace $ #"export\s" "")
-                        (string/trim $)
-                        (string/split $ #"="))))
-         (remove (fn [v] (not (= (count v) 2))))
-         (into {}))))
-
 (defn- run-with-env
   [cmd opts]
   (println "vero/running: " cmd)
@@ -68,6 +50,7 @@
       (.inheritIO pb))
     (.start pb)))
 
+;; Run a command and capture the resulting status code and output
 (defn <-run
   ([cmd opts]
    (let [cmd-str (map (fn [c] (str c)) cmd)
@@ -81,6 +64,7 @@
   ([cmd]
    (<-run cmd {})))
 
+;; Run a command and append the output to a specific log file
 (defn run*
   ([log-file cmd opts]
    (let [cmd-str (map (fn [c] (str c)) cmd)
@@ -100,6 +84,7 @@
   ([log-file cmd]
    (run* log-file cmd {})))
 
+;; Run a command in interactive mode
 (defn run
   ([cmd opts]
    (run* nil cmd (assoc opts :interactive true)))
@@ -108,7 +93,7 @@
 
 (defn berglas-access
   [url]
-  (let [res (<-run ["scripts/secrets.sh" "access-url" url])]
+  (let [res (<-run ["berglas" "access" url])]
     (if (= (:status res) 0)
       (->> (:output res)
            (string/trim))
