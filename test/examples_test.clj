@@ -14,7 +14,7 @@
   (testing "Testing examples/minimal.clj"
     (let [{exit :exit
            out :out
-           err :err} (sh "./examples/minimal.clj")
+           err :err} (sh "./minimal.clj" :dir "./examples")
           fixture "vero/running:  (git rev-parse --show-toplevel)
 minimal.clj
 
@@ -23,6 +23,16 @@ Usage:
 
 Options:
   -h --help             Show this screen"]
+      (is (= 0 exit))
+      (is (= (string/trim out) (string/trim fixture))))))
+
+(deftest test-extra-classpath-example
+  (testing "Testing examples/extra-classpath.clj"
+    (let [{exit :exit
+           out :out
+           err :err} (sh "./extra-classpath.clj" "example-method" :dir "./examples")
+          fixture "vero/running:  (git rev-parse --show-toplevel)
+Example method from an extra classpath"]
       (is (= 0 exit))
       (is (= (string/trim out) (string/trim fixture))))))
 

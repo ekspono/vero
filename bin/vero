@@ -1,0 +1,18 @@
+#!/bin/sh
+
+SCRIPT=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+
+VERO_CLASSPATH="${SCRIPTPATH}/../src"
+
+PASS_THROUGH_ARGS=$(bb -i '(let [args (->> *command-line-args*
+                                            (remove (fn [s] (re-matches #"--vero-.*" s))))]
+                                (print (clojure.string/join " " args)))' $@)
+EXTRA_CLASSPATH=$(bb -i '(let [args (->> *command-line-args*
+                                         (filter (fn [s] (re-matches #"--vero-.*" s)))
+                                         (map (fn [s]
+                                                (let [p (clojure.string/split s #"=")] [(first p) (second p)])))
+                                         (into {}))]
+                            (print (get args "--vero-classpath")))' $@)
+
+bb --classpath "$VERO_CLASSPATH:$EXTRA_CLASSPATH" $PASS_THROUGH_ARGS

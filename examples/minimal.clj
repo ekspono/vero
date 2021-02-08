@@ -1,8 +1,4 @@
-#!/bin/sh
-
-#_(
-   "exec" "bb" "--classpath" "src" "$0" "$@"
-   )
+#!../bin/vero
 
 (require '[ekspono.vero :as vero])
 
