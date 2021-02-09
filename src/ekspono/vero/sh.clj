@@ -3,7 +3,8 @@
             [clojure.java.shell :refer [sh]]
             [clojure.string :as string]
             [clojure.edn :as edn]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [ekspono.vero.colors :as colors]))
 
 (defn exit [status msg]
   (println msg)
@@ -14,7 +15,7 @@
 
 (defn- run-with-env
   [cmd opts]
-  (println "vero/running: " cmd)
+  (println (colors/cyan "vero »") cmd)
   (let [dir (or (:dir opts) ".")
         env-vars (->> (for [[k v] (:env opts)]
                         (str k "=" v))
