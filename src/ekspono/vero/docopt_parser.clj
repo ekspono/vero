@@ -8,7 +8,7 @@
   "#!/bin/bash
    
 RESULT=$(clojure -Spath -Sdeps '{:deps {docopt/docopt {:git/url \"https://github.com/nubank/docopt.clj\"
-                                 :sha     \"12b997548381b607ddb246e4f4c54c01906e70aa\"}}}')
+                                                       :sha     \"12b997548381b607ddb246e4f4c54c01906e70aa\"}}}')
    
 echo $RESULT > $1/vero-classpath")
 
