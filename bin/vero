@@ -1,9 +1,11 @@
 #!/bin/sh
 
+set -e
+
 PLATFORM=$(uname -s)
 
-READLINK_CMD=$(bb -i '(let [n (clojure.string/trim (first *command-line-args*))] 
-                          (print (cond 
+READLINK_CMD=$(bb -i '(let [n (clojure.string/trim (first *command-line-args*))]
+                          (print (cond
                                      (= "Linux" n) "readlink"
                                      (= "Darwin" n) "greadlink"
                                      :else "unsupported")))' $PLATFORM)
@@ -13,7 +15,7 @@ if [ $READLINK_CMD = "unsupported" ]; then
     exit 1
 fi
 
-SCRIPT=$(readlink -f "$0")
+SCRIPT=$($READLINK_CMD -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 
 VERO_CLASSPATH="${SCRIPTPATH}/../src"
