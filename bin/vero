@@ -1,5 +1,18 @@
 #!/bin/sh
 
+PLATFORM=$(uname -s)
+
+READLINK_CMD=$(bb -i '(let [n (clojure.string/trim (first *command-line-args*))] 
+                          (print (cond 
+                                     (= "Linux" n) "readlink"
+                                     (= "Darwin" n) "greadlink"
+                                     :else "unsupported")))' $PLATFORM)
+
+if [ $READLINK_CMD = "unsupported" ]; then
+    echo "vero error: Unsupported platform: $PLATFORM"
+    exit 1
+fi
+
 SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 
