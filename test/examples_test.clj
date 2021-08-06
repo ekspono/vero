@@ -15,7 +15,7 @@
     (let [{exit :exit
            out :out
            err :err} (sh "./minimal.clj" :dir "./examples")
-          fixture "vero/running:  (git rev-parse --show-toplevel)
+          fixture "[36mvero »[0m (git rev-parse --show-toplevel)
 minimal.clj
 
 Usage:
@@ -31,7 +31,7 @@ Options:
     (let [{exit :exit
            out :out
            err :err} (sh "./extra-classpath.clj" "example-method" :dir "./examples")
-          fixture "vero/running:  (git rev-parse --show-toplevel)
+          fixture "[36mvero »[0m (git rev-parse --show-toplevel)
 Example method from an extra classpath"]
       (is (= 0 exit))
       (is (= (string/trim out) (string/trim fixture))))))
