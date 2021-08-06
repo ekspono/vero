@@ -1,6 +1,6 @@
 # Vero
 
-Vero is a utility belt that can be used to build CLI tools using Babashka. With vero we can write performant and flexible Clojure scripts instead of bash scripts. This project is not ready to be used off-the-shelf. Take a look if you're curious about how to use Clojure instead of bash in a variety of different scripting use cases. Also, feel free to contact us to discuss!
+Vero is a utility belt that can be used to build CLI tools using [Babashka](https://github.com/babashka/babashka). With vero we can write performant and flexible Clojure scripts instead of bash scripts. This project is not ready to be used off-the-shelf. Take a look if you're curious about how to use Clojure instead of bash in a variety of different scripting use cases. Also, feel free to contact us to discuss!
 
 Vero is: 
 
