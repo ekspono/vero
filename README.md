@@ -7,7 +7,7 @@ Vero is:
 * A library of functions that are useful when writing "bash like" scripts 
 * A scaffolding for how to run Babashka scripts with some standardized features on top: argument parsing, config file loading, error handling, etc.
 
-Vero is experimental and not finished. At ekspono we use Vero for all our "scripts". This includes both monorepo utility scripts and cloud infrastructure management scripts.
+Vero is experimental and not finished. At ekspono we use Vero for all our "scripts". This includes both monorepo utility scripts and cloud infrastructure management scripts. This repo contains the core of Vero. Internally we have a lot of additional libraries that help us solve our use-cases.
 
 ## Setup
 
