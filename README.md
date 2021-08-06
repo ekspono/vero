@@ -13,4 +13,36 @@ Vero is experimental and not finished. At ekspono we use Vero for all our "scrip
 
 At the moment Vero is a bit complicated to set up. This is fine for us since we have a monorepo structure and a containerized dev environment where Vero is provided.
 
+## Example
+
+Here's an annotated example of a Vero script that tries to convey the most important features:
+
+```Clojure
+#!../bin/vero
+
+(require '[ekspono.vero :as vero])
+
+(defn hello
+  []
+  (println "world!"))
+
+(def usage "minimal.clj
+
+Usage:
+  minimal.clj hello
+
+Options:
+  -h --help             Show this screen")
+
+(def config
+  {:usage usage
+   :vars []})
+
+(vero/start config *command-line-args*
+            (fn [opts]
+              (cond
+                (:hello opts) (hello))))
+
+```
+
 Executable example scripts can be found in the `examples` directory.
