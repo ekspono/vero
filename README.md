@@ -24,7 +24,7 @@ Here's an annotated example of a Vero script that tries to convey the most impor
 
 **example.clj**
 
-(`bin/vero` is a wrapper script that is used to fix argument passing on linux and MacOS when calling the Babashka bin)
+(`bin/vero` is a wrapper script that is used to fix argument passing on linux and MacOS when calling the Babashka binary)
 
 ```Clojure
 #!bin/vero
