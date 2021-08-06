@@ -29,6 +29,8 @@ Here's an annotated example of a Vero script that tries to convey the most impor
 ```Clojure
 #!bin/vero
 
+#!../bin/vero
+
 (require '[ekspono.vero :as vero])
 
 (defn say-hello
@@ -46,9 +48,10 @@ Here's an annotated example of a Vero script that tries to convey the most impor
 (def usage "example.clj
 
 Usage:
-  example.clj say-hello --text
+  example.clj say-hello --text=<text>
 
 Options:
+  --text=<text>         Text input to print
   -h --help             Show this screen")
 
 ;; Configuration for Vero
@@ -56,12 +59,12 @@ Options:
   {:usage usage
    ;; edn files can be read at startup and are available when Vero vars are created
    :edn-files {:example "my-example-file.edn"}
-   ;; Vero variables are created at startup and can be read / written to from any function. They can be created from different sources.
-   :vars 
-   ["FROM_CLI_OPTION" [:opt :name]
-   ["FROM_ENV_VAR" "${MY_ENV_VAR}"
-   ["FROM_CMD" [:cmd "echo this text comes from a command execution"]
-   ["FROM_EDN_FILE" [:file [:example :text]]]]})
+   ;; Vero variables are created at startup and can be read / written to from any function. 
+   ;; They can be created from different sources.
+   :vars ["FROM_CLI_OPTION" [:opt :text]
+          "FROM_ENV_VAR" [:cmd "echo $MY_ENV_VAR"]
+          "FROM_CMD" [:cmd "echo This text comes from a command execution"]
+          "FROM_EDN_FILE" [:file [:example :text]]]})
 
 (vero/start config *command-line-args*
             (fn [opts]
@@ -73,6 +76,5 @@ Options:
 Execute with: 
 
 `MY_ENV_VAR="This text comes from an env var" ./example.clj say-hello --text text_from_env_var`
-
 
 Executable example scripts can be found in the `examples` directory.
