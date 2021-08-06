@@ -1,6 +1,7 @@
 #!../bin/vero
 
-(require '[ekspono.vero :as vero])
+(require '[ekspono.vero :as vero :refer [run <-run]]
+         '[ekspono.vero.errors :refer [fatal!]])
 
 (defn say-hello
   []
@@ -11,7 +12,14 @@
     (println from-opt)
     (println from-env-var)
     (println from-cmd)
-    (println from-edn-file)))
+    (println from-edn-file))
+  
+  ;; Vero has utility functions for calling other binaries.
+  (let [result (<-run ["echo" "hello"])]
+    (println "Run commands and capture the exit status and output:" result))
+  
+  ;; Run commands without capturing the output
+  (run ["echo" "some text"]))
 
 ;; Argument parsing is done by docopt
 (def usage "example.clj

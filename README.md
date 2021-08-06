@@ -11,7 +11,7 @@ Vero is experimental and not finished. At ekspono we use Vero for all our "scrip
 
 ## Setup
 
-At the moment Vero is a bit complicated to set up. This is fine for us since we have a monorepo structure and a containerized dev environment where Vero is provided.
+At the moment Vero is a bit complicated to set up. This is fine for us since we have a monorepo structure and a containerized dev environment where Vero is provided. Vero currently has a hard dependency on git and needs to be executed inside a git repository.
 
 ## Example
 
@@ -24,14 +24,13 @@ Here's an annotated example of a Vero script that tries to convey the most impor
 
 **example.clj**
 
-(`bin/vero` is a wrapper script that is used to fix argument passing on linux and MacOS when calling the Babashka binary)
+(`../bin/vero` is a wrapper script that is used to fix argument passing on linux and MacOS when calling the Babashka binary)
 
 ```Clojure
-#!bin/vero
-
 #!../bin/vero
 
-(require '[ekspono.vero :as vero])
+(require '[ekspono.vero :as vero :refer [run <-run]]
+         '[ekspono.vero.errors :refer [fatal!]])
 
 (defn say-hello
   []
@@ -42,7 +41,14 @@ Here's an annotated example of a Vero script that tries to convey the most impor
     (println from-opt)
     (println from-env-var)
     (println from-cmd)
-    (println from-edn-file)))
+    (println from-edn-file))
+  
+  ;; Vero has utility functions for calling other binaries.
+  (let [result (<-run ["echo" "hello"])]
+    (println "Run commands and capture the exit status and output:" result))
+  
+  ;; Run commands without capturing the output
+  (run ["echo" "some text"]))
 
 ;; Argument parsing is done by docopt
 (def usage "example.clj
@@ -70,7 +76,6 @@ Options:
             (fn [opts]
               (cond
                 (:say-hello opts) (say-hello))))
-
 ```
 
 Execute with: 
