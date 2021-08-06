@@ -17,32 +17,62 @@ At the moment Vero is a bit complicated to set up. This is fine for us since we 
 
 Here's an annotated example of a Vero script that tries to convey the most important features:
 
+**my-example-file.edn**
 ```Clojure
-#!../bin/vero
+{:text "This text comes from an edn file"}
+```
+
+**example.clj**
+
+(`bin/vero` is a wrapper script that is used to fix argument passing on linux and MacOS when calling the Babashka bin)
+
+```Clojure
+#!bin/vero
 
 (require '[ekspono.vero :as vero])
 
-(defn hello
+(defn say-hello
   []
-  (println "world!"))
+  (let [from-opt (vero/var "FROM_CLI_OPTION")
+        from-env-var (vero/var "FROM_ENV_VAR")
+        from-cmd (vero/var "FROM_CMD")
+        from-edn-file (vero/var "FROM_EDN_FILE")]
+    (println from-opt)
+    (println from-env-var)
+    (println from-cmd)
+    (println from-edn-file)))
 
-(def usage "minimal.clj
+;; Argument parsing is done by docopt
+(def usage "example.clj
 
 Usage:
-  minimal.clj hello
+  example.clj say-hello --text
 
 Options:
   -h --help             Show this screen")
 
+;; Configuration for Vero
 (def config
   {:usage usage
-   :vars []})
+   ;; edn files can be read at startup and are available when Vero vars are created
+   :edn-files {:example "my-example-file.edn"}
+   ;; Vero variables are created at startup and can be read / written to from any function. They can be created from different sources.
+   :vars 
+   ["FROM_CLI_OPTION" [:opt :name]
+   ["FROM_ENV_VAR" "${MY_ENV_VAR}"
+   ["FROM_CMD" [:cmd "echo this text comes from a command execution"]
+   ["FROM_EDN_FILE" [:file [:example :text]]]]})
 
 (vero/start config *command-line-args*
             (fn [opts]
               (cond
-                (:hello opts) (hello))))
+                (:say-hello opts) (say-hello))))
 
 ```
+
+Execute with: 
+
+`MY_ENV_VAR="This text comes from an env var" ./example.clj say-hello --text text_from_env_var`
+
 
 Executable example scripts can be found in the `examples` directory.
